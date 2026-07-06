@@ -1,0 +1,44 @@
+{
+  "name": "md-file-viewer",
+  "version": "1.0.0",
+  "description": "Secure production-ready Markdown viewer for Windows",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "dev": "npm run build && electron .",
+    "build": "tsc && vite build",
+    "test": "vitest run",
+    "package": "npm run build && electron-builder --win"
+  },
+  "dependencies": {
+    "dompurify": "^3.2.3",
+    "katex": "^0.17.0",
+    "marked": "^15.0.7"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.2.0",
+    "@types/node": "^22.10.2",
+    "electron": "^33.2.1",
+    "electron-builder": "^26.15.3",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8"
+  },
+  "build": {
+    "appId": "com.mdviewer.app",
+    "productName": "MarkdownViewer",
+    "icon": "markdown.png",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*"
+    ],
+    "win": {
+      "icon": "markdown.png",
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}

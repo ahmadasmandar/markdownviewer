@@ -1,0 +1,115 @@
+<!--
+  Author: Ahmad Asmandar <ahmedasmnr2@gmail.com>
+  License: MIT
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Viewer - ASMANDAR</title>
+  <link rel="stylesheet" href="./styles/styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header no-print">
+      <div class="controls-left">
+        <button id="btn-open" class="btn btn-primary">
+          <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19,20H4C2.89,20 2,19.1 2,18V6C2,4.89 2.89,4 4,4H10L12,6H19A2,2 0 0,1 21,8V18A2,2 0 0,1 19,20M19,8H11.17L9.17,6H4V18H19V8Z"/></svg>
+          Open File
+        </button>
+        <button id="btn-save" class="btn btn-success" style="display: none;" title="Save (Ctrl+S)">
+          <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"/></svg>
+          Save
+        </button>
+        <span id="file-path-display" class="file-path">No file loaded. Drag & drop a markdown file here or click Open.</span>
+      </div>
+      <div class="controls-right">
+        <button id="btn-toggle-edit" class="btn btn-outline" disabled title="Toggle Edit Mode">
+          <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25Z"/></svg>
+          Edit Mode
+        </button>
+        <button id="btn-export-html" class="btn" disabled>
+          <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>
+          Export HTML
+        </button>
+        <button id="btn-export-pdf" class="btn btn-secondary" disabled>
+          <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V13H13V7H11M11,15V17H13V15H11Z"/></svg>
+          Export PDF
+        </button>
+        <button id="btn-open-folder" class="btn btn-outline" disabled title="Open Export Folder">
+          <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19,20H4C2.89,20 2,19.1 2,18V6C2,4.89 2.89,4 4,4H10L12,6H19A2,2 0 0,1 21,8V18A2,2 0 0,1 19,20M19,8H11.17L9.17,6H4V18H19V8Z"/></svg>
+          Open Folder
+        </button>
+        <button id="btn-batch-convert" class="btn btn-outline" title="Batch Convert MD files to PDF">
+          <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19 8H5v14h14V8zm2-6H3a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-2 4v2H5V6h14zm-4 8H9v-2h6v2zm-6 4v-2h6v2H9z"/></svg>
+          Batch Convert
+        </button>
+        <div class="zoom-controls">
+          <button id="btn-zoom-out" class="btn-icon" title="Zoom Out">
+            <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19,13H5V11H19V13Z"/></svg>
+          </button>
+          <span id="zoom-display" class="zoom-text">100%</span>
+          <button id="btn-zoom-in" class="btn-icon" title="Zoom In">
+            <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
+          </button>
+        </div>
+        <button id="btn-theme" class="btn-icon" title="Toggle Theme">
+          <svg id="theme-icon" class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/></svg>
+        </button>
+        <button id="btn-about" class="btn-icon" title="About / Help">
+          <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div id="tab-bar" class="tab-bar no-print">
+      <div id="tabs-list" class="tabs-list">
+        <!-- Tabs will be rendered here dynamically -->
+      </div>
+      <button id="btn-new-tab" class="btn-new-tab" title="New Tab">
+        <svg class="icon" viewBox="0 0 24 24" style="width: 1rem; height: 1rem;"><path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
+      </button>
+    </div>
+
+    <main id="drag-zone" class="preview-container">
+      <div id="preview-area" class="preview-area markdown-body">
+        <div class="empty-state">
+          <svg class="empty-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,20H18A2,2 0 0,0 20,18V8L14,2M18,18H6V4H13V9H18V18M16,11H8V13H16V11M16,14H8V16H16V14M11,8H8V10H11V8Z"/></svg>
+          <h2>Markdown Viewer</h2>
+          <p>Drag and drop a <code>.md</code> file here, or click "Open File" to load.</p>
+        </div>
+      </div>
+      <textarea id="editor-area" class="editor-area" style="display: none;"></textarea>
+    </main>
+  </div>
+
+  <!-- About / Help Modal -->
+  <div id="about-modal" class="modal no-print">
+    <div class="modal-content">
+      <span id="close-about-modal" class="modal-close">&times;</span>
+      <h2>About Markdown Viewer - ASMANDAR</h2>
+      <p>A professional, secure, and fast Markdown viewer for Windows.</p>
+      <div class="modal-body-content">
+        <h3>Help & Guide</h3>
+        <ul>
+          <li><strong>Open File:</strong> Load any .md or .markdown file.</li>
+          <li><strong>Save / Save As:</strong> Save edits directly or save a new copy.</li>
+          <li><strong>Edit Mode:</strong> Toggle "Edit Mode" to view/edit raw Markdown.</li>
+          <li><strong>Multi-Tabs:</strong> Work on multiple documents at once.</li>
+          <li><strong>Math Support:</strong> Native LaTeX rendering using KaTeX (e.g. $E=mc^2$).</li>
+          <li><strong>Export:</strong> Save as HTML or print-optimized PDF.</li>
+        </ul>
+        <div class="about-author">
+          <strong>Developer Information:</strong><br>
+          Author: Ahmad Asmandar<br>
+          Email: <a href="mailto:ahmedasmnr2@gmail.com" style="color: var(--primary-color);">ahmedasmnr2@gmail.com</a><br>
+          GitHub Repository: <a href="https://github.com/ahmadasmandar/markdownviewer" target="_blank" style="color: var(--primary-color);">ahmadasmandar/markdownviewer</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./index.ts"></script>
+</body>
+</html>
