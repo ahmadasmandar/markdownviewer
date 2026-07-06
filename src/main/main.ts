@@ -48,6 +48,22 @@ function createWindow() {
     console.error('Failed to load index.html:', err);
   });
 
+  // Open external links in default system browser
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    if (url.startsWith('http:') || url.startsWith('https:')) {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
+  });
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('http:') || url.startsWith('https:')) {
+      shell.openExternal(url);
+      return { action: 'deny' };
+    }
+    return { action: 'allow' };
+  });
+
   mainWindow.webContents.on('context-menu', (event, params) => {
     const menu = new Menu();
 
